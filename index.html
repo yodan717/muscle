@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="筋トレ">
+<meta name="theme-color" content="#534AB7">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect width='180' height='180' rx='40' fill='%23534AB7'/%3E%3Ctext x='90' y='118' font-size='90' text-anchor='middle' fill='%23EEEDFE' font-family='sans-serif'%3E%F0%9F%92%AA%3C/text%3E%3C/svg%3E">
+<title>筋トレ — 月・木</title>
+<style>
+
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Helvetica Neue", Arial, sans-serif;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #5c5c5c;
+  --color-text-tertiary: #8a8a8a;
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f5f5f7;
+  --color-border-secondary: #d8d8dd;
+  --color-border-tertiary: #e6e6ea;
+  --border-radius-md: 10px;
+  --border-radius-lg: 14px;
+}
+html, body { margin: 0; padding: 0; background: #ffffff; -webkit-text-size-adjust: 100%; }
+body { font-family: var(--font-sans); padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+* { box-sizing: border-box; }
+.wrap { padding: 1.5rem 2rem; font-family: var(--font-sans); max-width: 960px; margin: 0 auto; }
+.top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+.top-left h2 { font-size: 24px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 4px; }
+.top-left p { font-size: 15px; color: var(--color-text-secondary); margin: 0; }
+.set-dots { display: flex; gap: 10px; align-items: center; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--color-border-tertiary); transition: background 0.3s; }
+.dot.done { background: #534AB7; }
+.progress-bar { height: 5px; background: var(--color-border-tertiary); border-radius: 3px; margin-bottom: 1.5rem; overflow: hidden; }
+.progress-fill { height: 100%; background: #534AB7; border-radius: 3px; transition: width 0.4s ease; }
+.layout { display: grid; grid-template-columns: 1fr 320px; gap: 1.25rem; align-items: start; }
+.cards-col { display: flex; flex-direction: column; gap: 0.7rem; }
+.ex-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.1rem 1.4rem; opacity: 0; transform: translateY(12px); transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.2s; }
+.ex-card.visible { opacity: 1; transform: translateY(0); }
+.ex-card.active { border-color: #534AB7; }
+.ex-header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.num-circle { width: 34px; height: 34px; border-radius: 50%; background: #EEEDFE; color: #3C3489; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; flex-shrink: 0; }
+.ex-title { font-size: 17px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.badge { font-size: 12px; padding: 3px 12px; border-radius: 99px; white-space: nowrap; background: #EEEDFE; color: #3C3489; }
+.ex-body { font-size: 14px; color: var(--color-text-secondary); }
+.ex-tip { font-size: 13px; color: var(--color-text-tertiary); margin-top: 3px; }
+.bar-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.bar-track { flex: 1; height: 3px; background: var(--color-border-tertiary); border-radius: 2px; overflow: hidden; }
+.bar-fill { height: 100%; background: #534AB7; width: 0%; }
+.bar-label { font-size: 13px; color: var(--color-text-secondary); min-width: 32px; text-align: right; }
+.side-col { display: flex; flex-direction: column; gap: 0.9rem; }
+.current-card { background: #EEEDFE; border: 0.5px solid #AFA9EC; border-radius: var(--border-radius-lg); padding: 1.25rem; }
+.current-label { font-size: 13px; color: #534AB7; margin: 0 0 5px; }
+.current-name { font-size: 22px; font-weight: 500; color: #3C3489; margin: 0 0 4px; }
+.current-detail { font-size: 13px; color: #534AB7; margin: 0; }
+.clock-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; }
+.clock-label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px; align-self: flex-start; }
+.clock-wrap { position: relative; width: 160px; height: 160px; }
+.clock-wrap canvas { position: absolute; top: 0; left: 0; }
+.clock-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
+.clock-num { font-size: 36px; font-weight: 500; color: var(--color-text-primary); line-height: 1; }
+.clock-unit { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; }
+.rest-card { display: none; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; text-align: center; }
+.rest-card.show { display: block; }
+.rest-num { font-size: 52px; font-weight: 500; color: #534AB7; line-height: 1; }
+.rest-label { font-size: 14px; color: var(--color-text-secondary); margin-top: 6px; }
+.stats-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+.stat-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.9rem 1rem; }
+.stat-label { font-size: 13px; color: var(--color-text-secondary); margin: 0 0 4px; }
+.stat-big { font-size: 28px; font-weight: 500; color: var(--color-text-primary); margin: 0; line-height: 1; }
+.stat-sub { font-size: 12px; color: var(--color-text-tertiary); margin: 3px 0 0; }
+.controls { display: flex; gap: 8px; }
+.controls button { flex: 1; padding: 12px; font-size: 15px; border-radius: var(--border-radius-md); cursor: pointer; }
+.btn-primary { background: #534AB7; color: #EEEDFE; border: none; font-weight: 500; }
+.btn-primary:hover { background: #3C3489; }
+.btn-primary:disabled { background: #AFA9EC; cursor: default; }
+.btn-pause { background: var(--color-background-secondary); color: var(--color-text-primary); border: 0.5px solid var(--color-border-secondary); font-weight: 500; }
+.btn-pause:hover { background: var(--color-border-tertiary); }
+.btn-pause.paused { background: #EEEDFE; color: #3C3489; border-color: #AFA9EC; }
+.btn-secondary { background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-secondary); }
+.status-bar { text-align: center; font-size: 13px; color: var(--color-text-tertiary); margin-top: 4px; min-height: 20px; }
+
+/* ---- mobile overrides ---- */
+@media (max-width: 760px) {
+  .wrap { padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom)); }
+  .top-left h2 { font-size: 20px; }
+  .layout { display: flex; flex-direction: column-reverse; gap: 1rem; }
+  .side-col { width: 100%; }
+  .controls button { padding: 14px; font-size: 16px; }
+  .clock-wrap { width: 150px; height: 150px; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+}
+
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <h2 class="sr-only">インタラクティブ筋トレガイド — デスクトップ版</h2>
+  <div class="top">
+    <div class="top-left">
+      <h2>筋トレ — 月・木</h2>
+      <p id="subtitle">スタートボタンで開始</p>
+    </div>
+    <div class="set-dots" id="setDots">
+      <span style="font-size:14px;color:var(--color-text-secondary);margin-right:4px;">セット</span>
+      <div class="dot" id="d0"></div>
+      <div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div class="layout">
+    <div class="cards-col" id="cards"></div>
+    <div class="side-col">
+      <div class="current-card">
+        <div class="current-label">現在の種目</div>
+        <div class="current-name" id="curName">—</div>
+        <div class="current-detail" id="curDetail">スタートを押してください</div>
+      </div>
+      <div class="clock-card">
+        <div class="clock-label">タイマー</div>
+        <div class="clock-wrap">
+          <canvas id="clockCanvas" width="160" height="160"></canvas>
+          <div class="clock-center">
+            <div class="clock-num" id="clockNum">—</div>
+            <div class="clock-unit" id="clockUnit">秒</div>
+          </div>
+        </div>
+      </div>
+      <div class="rest-card" id="restBox">
+        <div class="rest-num" id="restNum">60</div>
+        <div class="rest-label">セット間休憩（秒）</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">セット</div>
+          <div class="stat-big" id="setNum">—</div>
+          <div class="stat-sub">/ 3セット</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">種目</div>
+          <div class="stat-big" id="exNum">—</div>
+          <div class="stat-sub">/ 5種目</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn-primary" id="mainBtn" onclick="handleMain()">スタート</button>
+        <button class="btn-pause" id="pauseBtn" onclick="handlePause()" disabled>一時停止</button>
+        <button class="btn-secondary" onclick="handleReset()">リセット</button>
+      </div>
+      <div class="status-bar" id="status"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const exercises = [
+  { num:1, name:"スクワット", detail:"下半身・お尻全体", tip:"膝がつま先より前に出ないよう注意", reps:"15回", secs:40 },
+  { num:2, name:"プッシュアップ", detail:"胸・肩・腕", tip:"きつければ膝をついてOK。体を一直線に", reps:"10回", secs:35 },
+  { num:3, name:"クランチ", detail:"腹筋", tip:"へそを見るように上体を丸める", reps:"15回", secs:40 },
+  { num:4, name:"ヒップリフト", detail:"お尻・裏もも", tip:"仰向けで膝を立てお尻をゆっくり上げ下げ", reps:"15回", secs:40 },
+  { num:5, name:"プランク", detail:"体幹全体", tip:"肘をついてキープ。お尻を上げすぎない", reps:"30秒", secs:30 },
+];
+
+let state = "idle", currentEx = 0, currentSet = 0;
+let timerInterval = null, restInterval = null, rafId = null;
+let clockStart = null, clockDuration = 0, clockActive = false;
+let paused = false, currentTimeLeft = 0, restTimeLeft = 0;
+
+const canvas = document.getElementById("clockCanvas");
+const ctx = canvas.getContext("2d");
+const CX = 80, CY = 80, R = 68, LW = 10;
+const TOP = -Math.PI / 2;
+
+function drawClock(ratio) {
+  ctx.clearRect(0, 0, 160, 160);
+  ctx.lineWidth = LW;
+  ctx.lineCap = "butt";
+  ctx.beginPath();
+  ctx.arc(CX, CY, R, 0, Math.PI * 2);
+  ctx.strokeStyle = "#534AB7";
+  ctx.stroke();
+  if (ratio < 1) {
+    const elapsed = 1 - ratio;
+    const endAngle = TOP + Math.PI * 2 * elapsed;
+    ctx.beginPath();
+    ctx.arc(CX, CY, R, TOP, endAngle, false);
+    ctx.strokeStyle = "#EEEDFE";
+    ctx.stroke();
+  }
+}
+
+function startClockAnim(duration, startRatio) {
+  const r = (startRatio !== undefined) ? startRatio : 1;
+  clockDuration = duration / r;
+  clockStart = performance.now() - (clockDuration * (1 - r) * 1000);
+  clockActive = true;
+  if (rafId) cancelAnimationFrame(rafId);
+  function frame() {
+    if (!clockActive) return;
+    const elapsed = (performance.now() - clockStart) / 1000;
+    const ratio = Math.max(0, 1 - elapsed / clockDuration);
+    drawClock(ratio);
+    if (elapsed < clockDuration) rafId = requestAnimationFrame(frame);
+  }
+  rafId = requestAnimationFrame(frame);
+}
+
+function stopClockAnim() {
+  clockActive = false;
+  if (rafId) cancelAnimationFrame(rafId);
+}
+
+function resetClockDisplay() {
+  stopClockAnim();
+  drawClock(0);
+  document.getElementById("clockNum").textContent = "—";
+  document.getElementById("clockUnit").textContent = "秒";
+}
+
+function setPauseBtn(enabled, isPaused) {
+  const btn = document.getElementById("pauseBtn");
+  btn.disabled = !enabled;
+  btn.textContent = isPaused ? "再開" : "一時停止";
+  btn.classList.toggle("paused", isPaused);
+}
+
+function buildCards() {
+  const c = document.getElementById("cards");
+  c.innerHTML = "";
+  exercises.forEach((ex, i) => {
+    c.innerHTML += `<div class="ex-card" id="card${i}">
+      <div class="ex-header">
+        <div class="num-circle">${ex.num}</div>
+        <div class="ex-title">${ex.name}</div>
+        <div class="badge">${ex.reps}</div>
+      </div>
+      <div class="ex-body">${ex.detail}</div>
+      <div class="ex-tip">${ex.tip}</div>
+      <div class="bar-row" id="barRow${i}" style="display:none">
+        <div class="bar-track"><div class="bar-fill" id="bf${i}"></div></div>
+        <div class="bar-label" id="bl${i}">—</div>
+      </div>
+    </div>`;
+  });
+  setTimeout(() => {
+    exercises.forEach((_, i) => setTimeout(() => document.getElementById("card"+i).classList.add("visible"), i * 70));
+  }, 30);
+}
+
+function updateProgress() {
+  const done = currentSet * exercises.length + currentEx;
+  document.getElementById("prog").style.width = Math.round(done / (exercises.length * 3) * 100) + "%";
+}
+
+function updateDots() {
+  for (let i = 0; i < 3; i++) document.getElementById("d"+i).classList.toggle("done", i < currentSet);
+}
+
+function updateSide(exIdx, setIdx) {
+  const ex = exercises[exIdx];
+  document.getElementById("curName").textContent = ex ? ex.name : "完了";
+  document.getElementById("curDetail").textContent = ex ? ex.detail : "お疲れ様でした!";
+  document.getElementById("setNum").textContent = ex ? setIdx + 1 : 3;
+  document.getElementById("exNum").textContent = ex ? exIdx + 1 : 5;
+  document.getElementById("subtitle").textContent = ex ? "セット " + (setIdx+1) + " / 3" : "全セット完了";
+}
+
+function activateCard(i) {
+  exercises.forEach((_, j) => document.getElementById("card"+j).classList.toggle("active", j === i));
+  document.getElementById("barRow"+i).style.display = "flex";
+}
+
+function startExercise(i, resumeAt) {
+  activateCard(i);
+  updateSide(i, currentSet);
+  currentTimeLeft = (resumeAt !== undefined) ? resumeAt : exercises[i].secs;
+  const bf = document.getElementById("bf"+i);
+  const bl = document.getElementById("bl"+i);
+  bl.textContent = currentTimeLeft + "s";
+  const barRatio = currentTimeLeft / exercises[i].secs;
+  bf.style.transition = "none";
+  bf.style.width = (barRatio * 100) + "%";
+  void bf.offsetWidth;
+  bf.style.transition = "width " + currentTimeLeft + "s linear";
+  bf.style.width = "0%";
+  document.getElementById("clockNum").textContent = currentTimeLeft;
+  document.getElementById("clockUnit").textContent = "秒";
+  startClockAnim(currentTimeLeft, barRatio);
+  document.getElementById("status").textContent = exercises[i].tip;
+  document.getElementById("mainBtn").textContent = "次へ →";
+  setPauseBtn(true, false);
+  paused = false;
+  timerInterval = setInterval(() => {
+    currentTimeLeft--;
+    document.getElementById("clockNum").textContent = currentTimeLeft;
+    bl.textContent = currentTimeLeft + "s";
+    if (currentTimeLeft <= 0) {
+      clearInterval(timerInterval);
+      bl.textContent = "完了";
+      document.getElementById("clockNum").textContent = "完了";
+      document.getElementById("clockUnit").textContent = "";
+      stopClockAnim(); drawClock(0);
+      setPauseBtn(false, false);
+    }
+  }, 1000);
+}
+
+function startRest(onDone, resumeAt) {
+  clearInterval(timerInterval);
+  document.getElementById("restBox").classList.add("show");
+  document.getElementById("curName").textContent = "休憩中";
+  document.getElementById("curDetail").textContent = "次のセットまで60秒";
+  document.getElementById("mainBtn").textContent = "スキップ";
+  document.getElementById("status").textContent = "ゆっくり休んでください";
+  restTimeLeft = (resumeAt !== undefined) ? resumeAt : 60;
+  document.getElementById("restNum").textContent = restTimeLeft;
+  document.getElementById("clockNum").textContent = restTimeLeft;
+  document.getElementById("clockUnit").textContent = "秒";
+  startClockAnim(restTimeLeft, restTimeLeft / 60);
+  setPauseBtn(true, false);
+  paused = false;
+  restInterval = setInterval(() => {
+    restTimeLeft--;
+    document.getElementById("restNum").textContent = restTimeLeft;
+    document.getElementById("clockNum").textContent = restTimeLeft;
+    if (restTimeLeft <= 0) {
+      clearInterval(restInterval);
+      document.getElementById("restBox").classList.remove("show");
+      stopClockAnim(); drawClock(0);
+      setPauseBtn(false, false);
+      onDone();
+    }
+  }, 1000);
+}
+
+function handlePause() {
+  if (state !== "running" && state !== "resting") return;
+  if (!paused) {
+    paused = true;
+    clearInterval(timerInterval);
+    clearInterval(restInterval);
+    stopClockAnim();
+    setPauseBtn(true, true);
+    document.getElementById("status").textContent = "一時停止中";
+    document.getElementById("subtitle").textContent = "一時停止中";
+  } else {
+    paused = false;
+    setPauseBtn(true, false);
+    if (state === "running") {
+      startExercise(currentEx, currentTimeLeft);
+    } else {
+      startRest(() => { state = "running"; startExercise(currentEx); }, restTimeLeft);
+    }
+  }
+}
+
+function handleMain() {
+  if (state === "idle") {
+    state = "running"; currentEx = 0; currentSet = 0;
+    updateDots(); startExercise(0);
+  } else if (state === "running") {
+    if (paused) paused = false;
+    clearInterval(timerInterval);
+    stopClockAnim(); drawClock(0);
+    document.getElementById("bl"+currentEx).textContent = "完了";
+    setPauseBtn(false, false);
+    currentEx++;
+    updateProgress();
+    if (currentEx < exercises.length) {
+      startExercise(currentEx);
+    } else {
+      currentSet++; updateDots();
+      if (currentSet < 3) {
+        currentEx = 0; state = "resting";
+        buildCards();
+        startRest(() => { state = "running"; startExercise(0); });
+      } else {
+        state = "done";
+        document.getElementById("prog").style.width = "100%";
+        document.getElementById("mainBtn").textContent = "完了!";
+        document.getElementById("mainBtn").disabled = true;
+        updateSide(null, 2);
+        resetClockDisplay();
+        setPauseBtn(false, false);
+        document.getElementById("status").textContent = "お疲れ様でした! 3セット全部終わり!";
+      }
+    }
+  } else if (state === "resting") {
+    if (paused) paused = false;
+    clearInterval(restInterval);
+    document.getElementById("restBox").classList.remove("show");
+    stopClockAnim(); drawClock(0);
+    setPauseBtn(false, false);
+    state = "running"; startExercise(currentEx);
+  }
+}
+
+function handleReset() {
+  clearInterval(timerInterval); clearInterval(restInterval);
+  stopClockAnim();
+  state = "idle"; currentEx = 0; currentSet = 0; paused = false;
+  document.getElementById("restBox").classList.remove("show");
+  document.getElementById("prog").style.width = "0%";
+  document.getElementById("mainBtn").textContent = "スタート";
+  document.getElementById("mainBtn").disabled = false;
+  document.getElementById("subtitle").textContent = "スタートボタンで開始";
+  document.getElementById("curName").textContent = "—";
+  document.getElementById("curDetail").textContent = "スタートを押してください";
+  document.getElementById("setNum").textContent = "—";
+  document.getElementById("exNum").textContent = "—";
+  document.getElementById("status").textContent = "";
+  setPauseBtn(false, false);
+  resetClockDisplay();
+  updateDots(); buildCards();
+}
+
+drawClock(1);
+buildCards();
+</script>
+
+</body>
+</html>
