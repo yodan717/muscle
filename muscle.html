@@ -1,0 +1,1432 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="筋トレ">
+<meta name="theme-color" content="#534AB7">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Crect width='180' height='180' rx='40' fill='%23534AB7'/%3E%3Ctext x='90' y='118' font-size='90' text-anchor='middle' fill='%23EEEDFE' font-family='sans-serif'%3E%F0%9F%92%AA%3C/text%3E%3C/svg%3E">
+<title>筋トレ — 月・木</title>
+<style>
+
+:root {
+  --font-sans: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Helvetica Neue", Arial, sans-serif;
+  --color-text-primary: #1a1a1a;
+  --color-text-secondary: #5c5c5c;
+  --color-text-tertiary: #8a8a8a;
+  --color-background-primary: #ffffff;
+  --color-background-secondary: #f5f5f7;
+  --color-border-secondary: #d8d8dd;
+  --color-border-tertiary: #e6e6ea;
+  --border-radius-md: 10px;
+  --border-radius-lg: 14px;
+}
+html, body { margin: 0; padding: 0; background: #ffffff; -webkit-text-size-adjust: 100%; }
+body { font-family: var(--font-sans); padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom); }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+
+* { box-sizing: border-box; }
+.wrap { padding: 1.5rem 2rem; font-family: var(--font-sans); max-width: 960px; margin: 0 auto; }
+.top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.25rem; }
+.top-left h2 { font-size: 24px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 4px; }
+.top-left p { font-size: 15px; color: var(--color-text-secondary); margin: 0; }
+.set-dots { display: flex; gap: 10px; align-items: center; }
+.dot { width: 12px; height: 12px; border-radius: 50%; background: var(--color-border-tertiary); transition: background 0.3s; }
+.dot.done { background: #534AB7; }
+.progress-bar { height: 5px; background: var(--color-border-tertiary); border-radius: 3px; margin-bottom: 1.5rem; overflow: hidden; }
+.progress-fill { height: 100%; background: #534AB7; border-radius: 3px; transition: width 0.4s ease; }
+.layout { display: grid; grid-template-columns: 1fr 320px; gap: 1.25rem; align-items: start; }
+.left-col { display: flex; flex-direction: column; gap: 0.7rem; }
+.cards-col { display: flex; flex-direction: column; gap: 0.7rem; }
+.ex-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.1rem 1.4rem; opacity: 0; transform: translateY(12px); transition: opacity 0.3s ease, transform 0.3s ease, border-color 0.2s; }
+.ex-card.visible { opacity: 1; transform: translateY(0); }
+.ex-card.active { border-color: #534AB7; }
+.ex-header { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.num-circle { width: 34px; height: 34px; border-radius: 50%; background: #EEEDFE; color: #3C3489; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 500; flex-shrink: 0; }
+.ex-title { font-size: 17px; font-weight: 500; color: var(--color-text-primary); flex: 1; }
+.badge { font-size: 12px; padding: 3px 12px; border-radius: 99px; white-space: nowrap; background: #EEEDFE; color: #3C3489; }
+.ex-body { font-size: 14px; color: var(--color-text-secondary); }
+.ex-tip { font-size: 13px; color: var(--color-text-tertiary); margin-top: 3px; }
+.bar-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+.bar-track { flex: 1; height: 3px; background: var(--color-border-tertiary); border-radius: 2px; overflow: hidden; }
+.bar-fill { height: 100%; background: #534AB7; width: 0%; }
+.bar-label { font-size: 13px; color: var(--color-text-secondary); min-width: 32px; text-align: right; }
+.side-col { display: flex; flex-direction: column; gap: 0.9rem; }
+.current-card { background: #EEEDFE; border: 0.5px solid #AFA9EC; border-radius: var(--border-radius-lg); padding: 1.25rem; }
+.current-label { font-size: 13px; color: #534AB7; margin: 0 0 5px; }
+.current-name { font-size: 22px; font-weight: 500; color: #3C3489; margin: 0 0 4px; }
+.current-detail { font-size: 13px; color: #534AB7; margin: 0; }
+.clock-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; display: flex; flex-direction: column; align-items: center; }
+.clock-label { font-size: 13px; color: var(--color-text-secondary); margin-bottom: 12px; align-self: flex-start; }
+.clock-wrap { position: relative; width: 160px; height: 160px; }
+.clock-wrap canvas { position: absolute; top: 0; left: 0; }
+.clock-center { position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); text-align: center; pointer-events: none; }
+.clock-num { font-size: 36px; font-weight: 500; color: var(--color-text-primary); line-height: 1; }
+.clock-unit { font-size: 13px; color: var(--color-text-secondary); margin-top: 2px; }
+.rest-card { display: none; background: var(--color-background-secondary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.25rem; text-align: center; }
+.rest-card.show { display: block; }
+.rest-num { font-size: 52px; font-weight: 500; color: #534AB7; line-height: 1; }
+.rest-label { font-size: 14px; color: var(--color-text-secondary); margin-top: 6px; }
+.stats-row { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 8px; }
+.stat-card { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 0.9rem 1rem; }
+.stat-label { font-size: 13px; color: var(--color-text-secondary); margin: 0 0 4px; }
+.stat-big { font-size: 28px; font-weight: 500; color: var(--color-text-primary); margin: 0; line-height: 1; }
+.stat-sub { font-size: 12px; color: var(--color-text-tertiary); margin: 3px 0 0; }
+.controls { display: flex; gap: 8px; }
+.controls button { flex: 1; padding: 12px; font-size: 15px; border-radius: var(--border-radius-md); cursor: pointer; }
+.btn-primary { background: #534AB7; color: #EEEDFE; border: none; font-weight: 500; }
+.btn-primary:hover { background: #3C3489; }
+.btn-primary:disabled { background: #AFA9EC; cursor: default; }
+.btn-pause { background: var(--color-background-secondary); color: var(--color-text-primary); border: 0.5px solid var(--color-border-secondary); font-weight: 500; }
+.btn-pause:hover { background: var(--color-border-tertiary); }
+.btn-pause.paused { background: #EEEDFE; color: #3C3489; border-color: #AFA9EC; }
+.btn-secondary { background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-secondary); }
+.status-bar { text-align: center; font-size: 13px; color: var(--color-text-tertiary); margin-top: 4px; min-height: 20px; }
+
+/* ---- 実績入力・昇格 ---- */
+.reps-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.1rem; display: flex; flex-direction: column; align-items: center; gap: 8px; }
+.reps-card .stat-label { align-self: flex-start; }
+.stepper.big button { width: 40px; height: 40px; font-size: 18px; border-radius: 10px; }
+.stepper.big span { font-size: 22px; min-width: 3.2em; }
+.promo-banner { display: flex; align-items: center; gap: 10px; background: #EEEDFE; border: 0.5px solid #AFA9EC; border-radius: var(--border-radius-md); padding: 10px 14px; margin: -0.5rem 0 1rem; font-size: 14px; color: #3C3489; }
+.promo-banner span { flex: 1; }
+.promo-banner button { background: none; border: none; color: #534AB7; font-size: 16px; cursor: pointer; padding: 0 4px; }
+.sound-row { display: flex; align-items: center; gap: 8px; }
+.sound-row select { flex: 1; }
+.sound-row .try-btn { flex: 0 0 auto; padding: 6px 14px; font-size: 13px; border-radius: 8px; cursor: pointer; background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-secondary); }
+.sound-row .try-btn:hover { background: var(--color-border-tertiary); }
+
+/* ---- メニュー編集 ---- */
+.edit-toggle { padding: 10px; font-size: 14px; border-radius: var(--border-radius-md); cursor: pointer; background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-secondary); }
+.edit-toggle:hover { background: var(--color-border-tertiary); }
+.editor-card { background: var(--color-background-primary); border: 0.5px solid #AFA9EC; border-radius: var(--border-radius-lg); padding: 1.1rem 1.2rem; display: flex; flex-direction: column; gap: 0.9rem; }
+.editor-head { font-size: 16px; font-weight: 500; color: var(--color-text-primary); }
+.ed-rows { display: flex; flex-direction: column; gap: 8px; }
+.ed-row { border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 0.8rem 0.9rem; display: flex; flex-direction: column; gap: 8px; }
+.ed-line { display: flex; gap: 8px; align-items: center; }
+.ed-row input[type=text] { flex: 1; min-width: 0; padding: 8px 10px; font-size: 14px; border: 0.5px solid var(--color-border-secondary); border-radius: 8px; font-family: var(--font-sans); }
+.ed-label { font-size: 12px; color: var(--color-text-tertiary); min-width: 3.6em; flex-shrink: 0; }
+.stepper { display: flex; align-items: center; gap: 6px; }
+.stepper button { width: 30px; height: 30px; border-radius: 8px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); font-size: 16px; cursor: pointer; color: var(--color-text-secondary); padding: 0; line-height: 1; }
+.stepper button:hover { background: var(--color-border-tertiary); }
+.stepper span { min-width: 3.4em; text-align: center; font-size: 15px; color: var(--color-text-primary); }
+.ed-unit { padding: 6px 8px; font-size: 14px; border: 0.5px solid var(--color-border-secondary); border-radius: 8px; background: #fff; font-family: var(--font-sans); color: var(--color-text-primary); }
+.ed-del { margin-left: auto; background: none; border: none; color: #b4453d; font-size: 13px; cursor: pointer; padding: 4px 6px; flex-shrink: 0; }
+.ed-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+.ed-actions button { flex: 1; padding: 10px; font-size: 14px; border-radius: var(--border-radius-md); cursor: pointer; }
+
+/* ---- 記録セクション ---- */
+.record-sec { margin-top: 2rem; }
+.record-sec h3 { font-size: 18px; font-weight: 500; color: var(--color-text-primary); margin: 0 0 0.9rem; }
+.record-grid { display: grid; grid-template-columns: 1fr 320px; gap: 1.25rem; align-items: start; }
+.record-left { display: flex; flex-direction: column; gap: 0.9rem; }
+.stats-row.three { grid-template-columns: repeat(3, minmax(0,1fr)); }
+.streak-card { background: #EEEDFE; border-radius: var(--border-radius-md); }
+.streak-card .stat-label { color: #534AB7; }
+.streak-card .stat-big { color: #3C3489; }
+.streak-card .stat-sub { color: #534AB7; }
+.cal-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.1rem 1.2rem; }
+.cal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.7rem; }
+.cal-title { font-size: 16px; font-weight: 500; color: var(--color-text-primary); }
+.cal-nav { display: flex; gap: 6px; }
+.cal-nav button { width: 32px; height: 32px; border-radius: 8px; border: 0.5px solid var(--color-border-secondary); background: var(--color-background-secondary); font-size: 15px; cursor: pointer; color: var(--color-text-secondary); padding: 0; }
+.cal-nav button:hover { background: var(--color-border-tertiary); }
+.cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+.cal-dow { text-align: center; font-size: 12px; color: var(--color-text-tertiary); padding: 4px 0; }
+.cal-dow.sched { color: #534AB7; font-weight: 500; }
+.cal-blank { aspect-ratio: 1; }
+.cal-day { position: relative; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 14px; border-radius: 50%; color: var(--color-text-primary); cursor: pointer; -webkit-tap-highlight-color: transparent; transition: background 0.15s; }
+.cal-day:hover:not(.future) { background: var(--color-background-secondary); }
+.cal-day.future { color: var(--color-text-tertiary); cursor: default; }
+.cal-day.done { background: #534AB7; color: #EEEDFE; font-weight: 500; }
+.cal-day.done:hover { background: #3C3489; }
+.cal-day.today:not(.done) { box-shadow: inset 0 0 0 1.5px #534AB7; }
+.cal-day .sdot { position: absolute; bottom: 3px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; border-radius: 50%; background: #AFA9EC; }
+.cal-day.done .sdot { background: #EEEDFE; }
+.cal-hint { font-size: 12px; color: var(--color-text-tertiary); margin: 10px 0 0; text-align: center; }
+.data-btns { display: flex; gap: 8px; }
+.data-btns button { flex: 1; padding: 10px; font-size: 14px; border-radius: var(--border-radius-md); cursor: pointer; background: var(--color-background-secondary); color: var(--color-text-secondary); border: 0.5px solid var(--color-border-secondary); }
+.data-btns button:hover { background: var(--color-border-tertiary); }
+.storage-note { font-size: 12px; color: var(--color-text-tertiary); margin: 0; min-height: 16px; }
+
+/* ---- 実績バッジ ---- */
+.badge-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+.badge-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-md); padding: 0.85rem 0.6rem; text-align: center; }
+.badge-card .badge-icon { font-size: 28px; line-height: 1; }
+.badge-card .badge-name { font-size: 14px; font-weight: 500; color: var(--color-text-primary); margin-top: 6px; }
+.badge-card .badge-desc { font-size: 11px; color: var(--color-text-tertiary); margin-top: 2px; }
+.badge-card .badge-date { font-size: 11px; color: #534AB7; margin-top: 4px; min-height: 13px; }
+.badge-card.locked { opacity: 0.45; }
+.badge-card.locked .badge-icon { filter: grayscale(1); }
+
+/* ---- 体重記録 ---- */
+.chart-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1.1rem 1.2rem; }
+.chart-wrap { width: 100%; }
+#weightChart { width: 100%; height: 220px; display: block; }
+.w-input-card { background: var(--color-background-primary); border: 0.5px solid var(--color-border-tertiary); border-radius: var(--border-radius-lg); padding: 1rem 1.1rem; display: flex; flex-direction: column; gap: 8px; }
+.w-line { display: flex; gap: 8px; }
+.w-input-card input { padding: 8px 10px; font-size: 15px; border: 0.5px solid var(--color-border-secondary); border-radius: 8px; font-family: var(--font-sans); }
+#wDate { flex: 1; min-width: 0; }
+#wVal { width: 84px; }
+.w-save { padding: 8px 16px; font-size: 14px; border-radius: var(--border-radius-md); cursor: pointer; }
+.w-list { display: flex; flex-direction: column; gap: 4px; }
+.w-item { display: flex; justify-content: space-between; align-items: center; font-size: 14px; color: var(--color-text-secondary); padding: 6px 10px; background: var(--color-background-secondary); border-radius: 8px; }
+.w-item button { background: none; border: none; color: var(--color-text-tertiary); cursor: pointer; font-size: 15px; padding: 0 4px; }
+
+/* ---- mobile overrides ---- */
+@media (max-width: 760px) {
+  .wrap { padding: 1rem 1rem calc(1rem + env(safe-area-inset-bottom)); }
+  .top-left h2 { font-size: 20px; }
+  .layout { display: flex; flex-direction: column-reverse; gap: 1rem; }
+  .side-col { width: 100%; }
+  .controls button { padding: 14px; font-size: 16px; }
+  .clock-wrap { width: 150px; height: 150px; }
+  .stats-row { grid-template-columns: repeat(2, 1fr); }
+  .stats-row.three { grid-template-columns: repeat(3, 1fr); }
+  .record-grid { display: flex; flex-direction: column; gap: 1rem; }
+  .record-sec { margin-top: 1.5rem; }
+}
+
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <h2 class="sr-only">インタラクティブ筋トレガイド — デスクトップ版</h2>
+  <div class="top">
+    <div class="top-left">
+      <h2>筋トレ — 月・木</h2>
+      <p id="subtitle">スタートボタンで開始</p>
+    </div>
+    <div class="set-dots" id="setDots">
+      <span style="font-size:14px;color:var(--color-text-secondary);margin-right:4px;">セット</span>
+      <div class="dot" id="d0"></div>
+      <div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div>
+    </div>
+  </div>
+  <div class="progress-bar"><div class="progress-fill" id="prog"></div></div>
+  <div class="promo-banner" id="promoBanner" hidden>
+    <span id="promoText"></span>
+    <button onclick="this.parentElement.hidden=true" aria-label="閉じる">×</button>
+  </div>
+  <div class="layout">
+    <div class="left-col">
+      <div class="cards-col" id="cards"></div>
+      <button class="edit-toggle" id="editToggle" onclick="openEditor()">メニューを編集</button>
+      <div class="editor-card" id="editor" hidden>
+        <div class="editor-head">メニュー編集</div>
+        <p class="storage-note">プッシュアップ系・スクワット系・ロウ系は、目標回数を2セッション連続（週2ペースで約1週間）全セット達成すると自動で次の段階に進化します。種目名を変更すると進化の対象外になります。</p>
+        <div class="ed-rows" id="edRows"></div>
+        <div class="ed-actions">
+          <button class="btn-secondary" onclick="edAdd()">＋ 種目を追加</button>
+          <button class="btn-secondary" onclick="edDefault()">初期メニューに戻す</button>
+        </div>
+        <div class="ed-actions">
+          <button class="btn-primary" onclick="edSave()">保存</button>
+          <button class="btn-secondary" onclick="closeEditor()">キャンセル</button>
+        </div>
+      </div>
+    </div>
+    <div class="side-col">
+      <div class="current-card">
+        <div class="current-label">現在の種目</div>
+        <div class="current-name" id="curName">—</div>
+        <div class="current-detail" id="curDetail">スタートを押してください</div>
+      </div>
+      <div class="clock-card">
+        <div class="clock-label">タイマー</div>
+        <div class="clock-wrap">
+          <canvas id="clockCanvas" width="160" height="160"></canvas>
+          <div class="clock-center">
+            <div class="clock-num" id="clockNum">—</div>
+            <div class="clock-unit" id="clockUnit">秒</div>
+          </div>
+        </div>
+      </div>
+      <div class="reps-card" id="repsCard" hidden>
+        <div class="stat-label">できた回数</div>
+        <div class="stepper big">
+          <button onclick="repsStep(-1)" aria-label="減らす">−</button>
+          <span id="repsVal">—</span>
+          <button onclick="repsStep(1)" aria-label="増やす">＋</button>
+        </div>
+        <p class="storage-note" style="text-align:center">「次へ」で記録されます（目標どおりならそのまま）</p>
+      </div>
+      <div class="rest-card" id="restBox">
+        <div class="rest-num" id="restNum">60</div>
+        <div class="rest-label">セット間休憩（秒）</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-label">セット</div>
+          <div class="stat-big" id="setNum">—</div>
+          <div class="stat-sub">/ 3セット</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">種目</div>
+          <div class="stat-big" id="exNum">—</div>
+          <div class="stat-sub">/ <span id="exTotal">5</span>種目</div>
+        </div>
+      </div>
+      <div class="controls">
+        <button class="btn-primary" id="mainBtn" onclick="handleMain()">スタート</button>
+        <button class="btn-pause" id="pauseBtn" onclick="handlePause()" disabled>一時停止</button>
+        <button class="btn-secondary" onclick="handleReset()">リセット</button>
+      </div>
+      <div class="sound-row">
+        <span class="ed-label">効果音</span>
+        <select class="ed-unit" id="soundSel" onchange="changeSound(this.value)"></select>
+        <button class="try-btn" onclick="playSound()">試聴</button>
+      </div>
+      <div class="status-bar" id="status"></div>
+    </div>
+  </div>
+
+  <div class="record-sec">
+    <h3>トレーニング記録</h3>
+    <div class="record-grid">
+      <div class="record-left">
+        <div class="stats-row three">
+          <div class="stat-card streak-card">
+            <div class="stat-label">連続記録</div>
+            <div class="stat-big" id="streakNum">0</div>
+            <div class="stat-sub">回（予定日ベース）</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">累計</div>
+            <div class="stat-big" id="totalNum">0</div>
+            <div class="stat-sub">回</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">今月</div>
+            <div class="stat-big" id="monthNum">0</div>
+            <div class="stat-sub">回</div>
+          </div>
+        </div>
+        <div class="data-btns">
+          <button onclick="exportData()">記録を書き出す</button>
+          <button onclick="document.getElementById('importFile').click()">記録を読み込む</button>
+          <input type="file" id="importFile" accept="application/json,.json" style="display:none" onchange="importData(event)">
+        </div>
+        <p class="storage-note" id="storageNote"></p>
+      </div>
+      <div class="cal-card">
+        <div class="cal-head">
+          <div class="cal-title" id="calTitle">—</div>
+          <div class="cal-nav">
+            <button onclick="moveCal(-1)" aria-label="前の月">‹</button>
+            <button onclick="moveCal(1)" aria-label="次の月">›</button>
+          </div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+        <p class="cal-hint">過去の日をタップすると記録を付け外しできます</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="record-sec">
+    <h3>体重記録</h3>
+    <div class="record-grid">
+      <div class="chart-card">
+        <div class="cal-head"><div class="cal-title">推移（直近30件）</div></div>
+        <div class="chart-wrap"><canvas id="weightChart"></canvas></div>
+        <p class="cal-hint" id="chartEmpty">体重を記録するとグラフが表示されます</p>
+      </div>
+      <div class="record-left">
+        <div class="w-input-card">
+          <div class="w-line">
+            <input type="date" id="wDate">
+            <input type="number" id="wVal" step="0.1" min="0" inputmode="decimal" placeholder="kg">
+            <button class="btn-primary w-save" onclick="saveWeight()">記録</button>
+          </div>
+          <p class="storage-note" id="wNote"></p>
+        </div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-label">最新</div>
+            <div class="stat-big" id="wLatest">—</div>
+            <div class="stat-sub" id="wLatestDate">未記録</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">前回比</div>
+            <div class="stat-big" id="wDiff">—</div>
+            <div class="stat-sub">kg</div>
+          </div>
+        </div>
+        <div class="w-list" id="wList"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="record-sec">
+    <h3>実績</h3>
+    <div class="badge-grid" id="badgeGrid"></div>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   メニュー定義（編集可能・保存される）
+   ============================================================ */
+const DEFAULT_MENU = [
+  { name:"スクワット", detail:"下半身・お尻全体", tip:"膝がつま先より前に出ないよう注意", reps:15, unit:"回", secs:40 },
+  { name:"プッシュアップ", detail:"胸・肩・腕", tip:"きつければ膝をついてOK。体を一直線に", reps:10, unit:"回", secs:35 },
+  { name:"ダンベルロウ（3kgスロー）", detail:"背中・広背筋", tip:"3秒で上げ3秒で下ろし、引き切って1秒キープ。左右各", reps:15, unit:"回", secs:90 },
+  { name:"リアレイズ", detail:"肩の後ろ・姿勢改善", tip:"前傾して3kgを横に開く。反動を使わずゆっくり", reps:12, unit:"回", secs:40 },
+  { name:"クランチ", detail:"腹筋", tip:"へそを見るように上体を丸める", reps:15, unit:"回", secs:40 },
+  { name:"ヒップリフト", detail:"お尻・裏もも", tip:"仰向けで膝を立てお尻をゆっくり上げ下げ", reps:15, unit:"回", secs:40 },
+  { name:"プランク", detail:"体幹全体", tip:"肘をついてキープ。お尻を上げすぎない", reps:30, unit:"秒", secs:30 },
+  { name:"バーンマシン", detail:"肩・腕・前腕（追い込み）", tip:"最後のフィニッシャー。肩の高さで一定リズムで回す", reps:30, unit:"秒", secs:30 },
+];
+let exercises = [];
+
+/* 進化チェーン: 目標を連続達成すると次の段階に自動昇格 */
+const CHAINS = [
+  [
+    { name:"プッシュアップ", detail:"胸・肩・腕", tip:"きつければ膝をついてOK。体を一直線に", reps:10, unit:"回", secs:35 },
+    { name:"足上げプッシュアップ", detail:"胸上部・肩", tip:"足を椅子やベッドに乗せて。体は一直線をキープ", reps:8, unit:"回", secs:35 },
+    { name:"アーチャープッシュアップ", detail:"胸・腕（片側ずつ強化）", tip:"片腕に体重を寄せ、反対の腕は横に伸ばして補助", reps:6, unit:"回", secs:40 },
+    { name:"片手プッシュアップ", detail:"胸・腕・体幹", tip:"足を広めに開いてバランス確保。浅い可動域から徐々に", reps:5, unit:"回", secs:40 },
+  ],
+  [
+    { name:"スクワット", detail:"下半身・お尻全体", tip:"膝がつま先より前に出ないよう注意", reps:15, unit:"回", secs:40 },
+    { name:"ブルガリアンスクワット", detail:"下半身（片脚ずつ）", tip:"後ろ足を椅子に乗せて。前膝はつま先の方向へ", reps:10, unit:"回", secs:45 },
+    { name:"ピストルスクワット", detail:"下半身・バランス", tip:"片脚で立ち反対脚を前に伸ばしてしゃがむ。最初は何かにつかまってOK", reps:5, unit:"回", secs:45 },
+  ],
+  [
+    { name:"ダンベルロウ（3kgスロー）", detail:"背中・広背筋", tip:"3秒で上げ3秒で下ろし、引き切って1秒キープ。左右各", reps:15, unit:"回", secs:90 },
+    { name:"リュックロウ", detail:"背中・広背筋", tip:"リュックにダンベル＋本を入れて重量アップ（6kg前後）。背中はフラットに", reps:12, unit:"回", secs:90 },
+    { name:"重量リュックロウ", detail:"背中・広背筋", tip:"10kg前後まで増量。腰を反らさず、引き切りで肩甲骨を寄せる", reps:10, unit:"回", secs:90 },
+  ],
+];
+const PROMOTE_STREAK = 2; // 連続達成セッション数（週2ペースで約1週間）
+let sessionResults = {};  // 今回のセッションの実績 {種目名: {target, unit, sets:[]}}
+let repsCurrent = 0;
+
+let state = "idle", currentEx = 0, currentSet = 0;
+let timerInterval = null, restInterval = null, rafId = null;
+let clockStart = null, clockDuration = 0, clockActive = false;
+let paused = false, currentTimeLeft = 0, restTimeLeft = 0;
+
+const canvas = document.getElementById("clockCanvas");
+const ctx = canvas.getContext("2d");
+const CX = 80, CY = 80, R = 68, LW = 10;
+const TOP = -Math.PI / 2;
+
+function esc(s) {
+  return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+function drawClock(ratio) {
+  ctx.clearRect(0, 0, 160, 160);
+  ctx.lineWidth = LW;
+  ctx.lineCap = "butt";
+  ctx.beginPath();
+  ctx.arc(CX, CY, R, 0, Math.PI * 2);
+  ctx.strokeStyle = "#534AB7";
+  ctx.stroke();
+  if (ratio < 1) {
+    const elapsed = 1 - ratio;
+    const endAngle = TOP + Math.PI * 2 * elapsed;
+    ctx.beginPath();
+    ctx.arc(CX, CY, R, TOP, endAngle, false);
+    ctx.strokeStyle = "#EEEDFE";
+    ctx.stroke();
+  }
+}
+
+function startClockAnim(duration, startRatio) {
+  const r = (startRatio !== undefined) ? startRatio : 1;
+  clockDuration = duration / r;
+  clockStart = performance.now() - (clockDuration * (1 - r) * 1000);
+  clockActive = true;
+  if (rafId) cancelAnimationFrame(rafId);
+  function frame() {
+    if (!clockActive) return;
+    const elapsed = (performance.now() - clockStart) / 1000;
+    const ratio = Math.max(0, 1 - elapsed / clockDuration);
+    drawClock(ratio);
+    if (elapsed < clockDuration) rafId = requestAnimationFrame(frame);
+  }
+  rafId = requestAnimationFrame(frame);
+}
+
+function stopClockAnim() {
+  clockActive = false;
+  if (rafId) cancelAnimationFrame(rafId);
+}
+
+function resetClockDisplay() {
+  stopClockAnim();
+  drawClock(0);
+  document.getElementById("clockNum").textContent = "—";
+  document.getElementById("clockUnit").textContent = "秒";
+}
+
+function setPauseBtn(enabled, isPaused) {
+  const btn = document.getElementById("pauseBtn");
+  btn.disabled = !enabled;
+  btn.textContent = isPaused ? "再開" : "一時停止";
+  btn.classList.toggle("paused", isPaused);
+}
+
+function buildCards() {
+  const c = document.getElementById("cards");
+  c.innerHTML = "";
+  exercises.forEach((ex, i) => {
+    c.innerHTML += `<div class="ex-card" id="card${i}">
+      <div class="ex-header">
+        <div class="num-circle">${i + 1}</div>
+        <div class="ex-title">${esc(ex.name)}</div>
+        <div class="badge">${ex.reps}${esc(ex.unit)}</div>
+      </div>
+      <div class="ex-body">${esc(ex.detail)}</div>
+      <div class="ex-tip">${esc(ex.tip)}</div>
+      <div class="bar-row" id="barRow${i}" style="display:none">
+        <div class="bar-track"><div class="bar-fill" id="bf${i}"></div></div>
+        <div class="bar-label" id="bl${i}">—</div>
+      </div>
+    </div>`;
+  });
+  document.getElementById("exTotal").textContent = exercises.length;
+  setTimeout(() => {
+    exercises.forEach((_, i) => setTimeout(() => document.getElementById("card"+i).classList.add("visible"), i * 70));
+  }, 30);
+}
+
+function updateProgress() {
+  const done = currentSet * exercises.length + currentEx;
+  document.getElementById("prog").style.width = Math.round(done / (exercises.length * 3) * 100) + "%";
+}
+
+function updateDots() {
+  for (let i = 0; i < 3; i++) document.getElementById("d"+i).classList.toggle("done", i < currentSet);
+}
+
+function updateSide(exIdx, setIdx) {
+  const ex = exercises[exIdx];
+  document.getElementById("curName").textContent = ex ? ex.name : "完了";
+  document.getElementById("curDetail").textContent = ex ? ex.detail : "お疲れ様でした!";
+  document.getElementById("setNum").textContent = ex ? setIdx + 1 : 3;
+  document.getElementById("exNum").textContent = ex ? exIdx + 1 : exercises.length;
+  document.getElementById("subtitle").textContent = ex ? "セット " + (setIdx+1) + " / 3" : "全セット完了";
+}
+
+function activateCard(i) {
+  exercises.forEach((_, j) => document.getElementById("card"+j).classList.toggle("active", j === i));
+  document.getElementById("barRow"+i).style.display = "flex";
+}
+
+function startExercise(i, resumeAt) {
+  activateCard(i);
+  updateSide(i, currentSet);
+  if (resumeAt === undefined) repsCurrent = exercises[i].reps;
+  document.getElementById("repsCard").hidden = false;
+  updateRepsDisplay();
+  currentTimeLeft = (resumeAt !== undefined) ? resumeAt : exercises[i].secs;
+  const bf = document.getElementById("bf"+i);
+  const bl = document.getElementById("bl"+i);
+  bl.textContent = currentTimeLeft + "s";
+  const barRatio = currentTimeLeft / exercises[i].secs;
+  bf.style.transition = "none";
+  bf.style.width = (barRatio * 100) + "%";
+  void bf.offsetWidth;
+  bf.style.transition = "width " + currentTimeLeft + "s linear";
+  bf.style.width = "0%";
+  document.getElementById("clockNum").textContent = currentTimeLeft;
+  document.getElementById("clockUnit").textContent = "秒";
+  startClockAnim(currentTimeLeft, barRatio);
+  document.getElementById("status").textContent = exercises[i].tip;
+  document.getElementById("mainBtn").textContent = "次へ →";
+  setPauseBtn(true, false);
+  paused = false;
+  timerInterval = setInterval(() => {
+    currentTimeLeft--;
+    document.getElementById("clockNum").textContent = currentTimeLeft;
+    bl.textContent = currentTimeLeft + "s";
+    if (currentTimeLeft <= 0) {
+      clearInterval(timerInterval);
+      playSound();
+      bl.textContent = "完了";
+      document.getElementById("clockNum").textContent = "完了";
+      document.getElementById("clockUnit").textContent = "";
+      stopClockAnim(); drawClock(0);
+      setPauseBtn(false, false);
+    }
+  }, 1000);
+}
+
+function startRest(onDone, resumeAt) {
+  clearInterval(timerInterval);
+  document.getElementById("repsCard").hidden = true;
+  document.getElementById("restBox").classList.add("show");
+  document.getElementById("curName").textContent = "休憩中";
+  document.getElementById("curDetail").textContent = "次のセットまで60秒";
+  document.getElementById("mainBtn").textContent = "スキップ";
+  document.getElementById("status").textContent = "ゆっくり休んでください";
+  restTimeLeft = (resumeAt !== undefined) ? resumeAt : 60;
+  document.getElementById("restNum").textContent = restTimeLeft;
+  document.getElementById("clockNum").textContent = restTimeLeft;
+  document.getElementById("clockUnit").textContent = "秒";
+  startClockAnim(restTimeLeft, restTimeLeft / 60);
+  setPauseBtn(true, false);
+  paused = false;
+  restInterval = setInterval(() => {
+    restTimeLeft--;
+    document.getElementById("restNum").textContent = restTimeLeft;
+    document.getElementById("clockNum").textContent = restTimeLeft;
+    if (restTimeLeft <= 0) {
+      clearInterval(restInterval);
+      playSound();
+      document.getElementById("restBox").classList.remove("show");
+      stopClockAnim(); drawClock(0);
+      setPauseBtn(false, false);
+      onDone();
+    }
+  }, 1000);
+}
+
+function handlePause() {
+  if (state !== "running" && state !== "resting") return;
+  if (!paused) {
+    paused = true;
+    clearInterval(timerInterval);
+    clearInterval(restInterval);
+    stopClockAnim();
+    setPauseBtn(true, true);
+    document.getElementById("status").textContent = "一時停止中";
+    document.getElementById("subtitle").textContent = "一時停止中";
+  } else {
+    paused = false;
+    setPauseBtn(true, false);
+    if (state === "running") {
+      startExercise(currentEx, currentTimeLeft);
+    } else {
+      startRest(() => { state = "running"; startExercise(currentEx); }, restTimeLeft);
+    }
+  }
+}
+
+function handleMain() {
+  ensureAudio();
+  if (state === "idle") {
+    state = "running"; currentEx = 0; currentSet = 0;
+    sessionResults = {};
+    acquireWakeLock();
+    updateDots(); startExercise(0);
+  } else if (state === "running") {
+    if (paused) paused = false;
+    captureReps(currentEx);
+    clearInterval(timerInterval);
+    stopClockAnim(); drawClock(0);
+    document.getElementById("bl"+currentEx).textContent = "完了";
+    setPauseBtn(false, false);
+    currentEx++;
+    updateProgress();
+    if (currentEx < exercises.length) {
+      startExercise(currentEx);
+    } else {
+      currentSet++; updateDots();
+      if (currentSet < 3) {
+        currentEx = 0; state = "resting";
+        buildCards();
+        startRest(() => { state = "running"; startExercise(0); });
+      } else {
+        state = "done";
+        releaseWakeLock();
+        playSound(2);
+        document.getElementById("repsCard").hidden = true;
+        document.getElementById("prog").style.width = "100%";
+        document.getElementById("mainBtn").textContent = "完了!";
+        document.getElementById("mainBtn").disabled = true;
+        updateSide(null, 2);
+        resetClockDisplay();
+        setPauseBtn(false, false);
+        const streak = recordTodayWorkout();
+        document.getElementById("status").textContent =
+          "お疲れ様でした! 3セット全部終わり!" + (streak > 1 ? " 連続" + streak + "回目です" : "");
+      }
+    }
+  } else if (state === "resting") {
+    if (paused) paused = false;
+    clearInterval(restInterval);
+    document.getElementById("restBox").classList.remove("show");
+    stopClockAnim(); drawClock(0);
+    setPauseBtn(false, false);
+    state = "running"; startExercise(currentEx);
+  }
+}
+
+function handleReset() {
+  clearInterval(timerInterval); clearInterval(restInterval);
+  stopClockAnim();
+  state = "idle"; currentEx = 0; currentSet = 0; paused = false;
+  releaseWakeLock();
+  sessionResults = {};
+  document.getElementById("repsCard").hidden = true;
+  document.getElementById("restBox").classList.remove("show");
+  document.getElementById("prog").style.width = "0%";
+  document.getElementById("mainBtn").textContent = "スタート";
+  document.getElementById("mainBtn").disabled = false;
+  document.getElementById("subtitle").textContent = "スタートボタンで開始";
+  document.getElementById("curName").textContent = "—";
+  document.getElementById("curDetail").textContent = "スタートを押してください";
+  document.getElementById("setNum").textContent = "—";
+  document.getElementById("exNum").textContent = "—";
+  document.getElementById("status").textContent = "";
+  setPauseBtn(false, false);
+  resetClockDisplay();
+  updateDots(); buildCards();
+}
+
+/* ============================================================
+   データ保存（v2: 記録 + 体重 + カスタムメニュー）
+   ============================================================ */
+
+const STORAGE_KEY = "kintoreRecords_v2";
+const OLD_STORAGE_KEY = "kintoreRecords_v1";
+const SCHEDULED_DAYS = [1, 4]; // 月・木
+let memStore = null; // localStorageが使えない環境用のフォールバック
+
+function emptyData() {
+  return { version: 2, workouts: {}, weights: {}, menu: null, settings: {}, badges: {} };
+}
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) {
+      const d = JSON.parse(raw);
+      if (d && typeof d === "object") {
+        if (typeof d.workouts !== "object" || d.workouts === null) d.workouts = {};
+        if (typeof d.weights !== "object" || d.weights === null) d.weights = {};
+        if (!Array.isArray(d.menu)) d.menu = null;
+        if (typeof d.settings !== "object" || d.settings === null) d.settings = {};
+        if (typeof d.badges !== "object" || d.badges === null) d.badges = {};
+        return d;
+      }
+    }
+    // v1からの移行
+    const oldRaw = localStorage.getItem(OLD_STORAGE_KEY);
+    if (oldRaw) {
+      const old = JSON.parse(oldRaw);
+      const migrated = emptyData();
+      if (old && typeof old.workouts === "object") migrated.workouts = old.workouts;
+      saveData(migrated);
+      return migrated;
+    }
+  } catch (e) { /* ignore */ }
+  return memStore || emptyData();
+}
+
+function saveData(data) {
+  memStore = data;
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); } catch (e) { /* ignore */ }
+}
+
+function getSetting(key, def) {
+  const s = loadData().settings || {};
+  return (key in s) ? s[key] : def;
+}
+
+function setSetting(key, value) {
+  const data = loadData();
+  if (!data.settings) data.settings = {};
+  data.settings[key] = value;
+  saveData(data);
+}
+
+/* ============================================================
+   効果音（Web Audioでその場で合成・ファイル不要）
+   ============================================================ */
+
+let audioCtx = null;
+
+function ensureAudio() {
+  try {
+    if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    if (audioCtx.state === "suspended") audioCtx.resume();
+  } catch (e) { /* ignore */ }
+}
+
+function tone(freq, start, dur, type, gain) {
+  const o = audioCtx.createOscillator(), g = audioCtx.createGain();
+  o.type = type;
+  o.frequency.value = freq;
+  const t0 = audioCtx.currentTime + start;
+  g.gain.setValueAtTime(0.0001, t0);
+  g.gain.exponentialRampToValueAtTime(gain, t0 + 0.01);
+  g.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+  o.connect(g);
+  g.connect(audioCtx.destination);
+  o.start(t0);
+  o.stop(t0 + dur + 0.05);
+}
+
+const SOUNDS = {
+  chime: { label: "チャイム", play() { tone(784, 0, 0.45, "sine", 0.3); tone(988, 0.18, 0.6, "sine", 0.25); } },
+  beep:  { label: "ビープ", play() { tone(880, 0, 0.12, "square", 0.2); tone(880, 0.2, 0.12, "square", 0.2); tone(880, 0.4, 0.25, "square", 0.2); } },
+  bell:  { label: "ベル", play() { tone(1318, 0, 0.8, "triangle", 0.3); tone(2637, 0, 0.4, "sine", 0.08); } },
+  arp:   { label: "電子音", play() { [523, 659, 784, 1046].forEach((f, i) => tone(f, i * 0.09, 0.18, "sine", 0.22)); } },
+  off:   { label: "なし", play() {} },
+};
+
+function playSound(times) {
+  const key = getSetting("sound", "chime");
+  const sound = SOUNDS[key] || SOUNDS.chime;
+  if (key === "off") return;
+  ensureAudio();
+  if (!audioCtx) return;
+  const n = times || 1;
+  for (let t = 0; t < n; t++) setTimeout(() => sound.play(), t * 800);
+}
+
+function changeSound(key) {
+  setSetting("sound", key);
+  playSound();
+}
+
+function initSoundSelect() {
+  const sel = document.getElementById("soundSel");
+  sel.innerHTML = Object.keys(SOUNDS).map(k =>
+    `<option value="${k}">${SOUNDS[k].label}</option>`).join("");
+  sel.value = getSetting("sound", "chime");
+}
+
+/* ============================================================
+   画面スリープ防止（Wake Lock）
+   ============================================================ */
+
+let wakeLock = null;
+
+async function acquireWakeLock() {
+  try {
+    if ("wakeLock" in navigator && (state === "running" || state === "resting")) {
+      wakeLock = await navigator.wakeLock.request("screen");
+    }
+  } catch (e) { /* 非対応・低電力モード時は無視 */ }
+}
+
+function releaseWakeLock() {
+  if (wakeLock) {
+    wakeLock.release().catch(() => {});
+    wakeLock = null;
+  }
+}
+
+// アプリに戻ってきたらロックを再取得（バックグラウンドで自動解放されるため）
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") acquireWakeLock();
+});
+
+function fmtDate(d) {
+  return d.getFullYear() + "-" +
+    String(d.getMonth() + 1).padStart(2, "0") + "-" +
+    String(d.getDate()).padStart(2, "0");
+}
+
+/* ============================================================
+   メニューの読み込みと編集
+   ============================================================ */
+
+function sanitizeMenuItem(it) {
+  return {
+    name: String(it.name || "種目"),
+    detail: String(it.detail || ""),
+    tip: String(it.tip || ""),
+    reps: Math.max(1, parseInt(it.reps, 10) || 10),
+    unit: (it.unit === "秒") ? "秒" : "回",
+    secs: Math.max(5, parseInt(it.secs, 10) || 30),
+  };
+}
+
+function loadMenu() {
+  const data = loadData();
+  if (data.menu && data.menu.length > 0) return data.menu.map(sanitizeMenuItem);
+  return DEFAULT_MENU.map(e => ({ ...e }));
+}
+
+let editMenu = null;
+
+function openEditor() {
+  if (state !== "idle") handleReset();
+  editMenu = exercises.map(e => ({ ...e }));
+  document.getElementById("cards").style.display = "none";
+  document.getElementById("editToggle").style.display = "none";
+  document.getElementById("editor").hidden = false;
+  renderEditor();
+}
+
+function closeEditor() {
+  editMenu = null;
+  document.getElementById("editor").hidden = true;
+  document.getElementById("cards").style.display = "flex";
+  document.getElementById("editToggle").style.display = "";
+}
+
+function renderEditor() {
+  const rows = document.getElementById("edRows");
+  rows.innerHTML = editMenu.map((ex, i) => `
+    <div class="ed-row">
+      <div class="ed-line">
+        <span class="ed-label">種目名</span>
+        <input type="text" value="${esc(ex.name)}" oninput="edSet(${i},'name',this.value)">
+        <button class="ed-del" onclick="edDel(${i})">削除</button>
+      </div>
+      <div class="ed-line">
+        <span class="ed-label">部位</span>
+        <input type="text" value="${esc(ex.detail)}" oninput="edSet(${i},'detail',this.value)">
+      </div>
+      <div class="ed-line">
+        <span class="ed-label">コツ</span>
+        <input type="text" value="${esc(ex.tip)}" oninput="edSet(${i},'tip',this.value)">
+      </div>
+      <div class="ed-line">
+        <span class="ed-label">回数</span>
+        <div class="stepper">
+          <button onclick="edStep(${i},'reps',-1)" aria-label="減らす">−</button>
+          <span>${ex.reps}${esc(ex.unit)}</span>
+          <button onclick="edStep(${i},'reps',1)" aria-label="増やす">＋</button>
+        </div>
+        <select class="ed-unit" onchange="edSet(${i},'unit',this.value);renderEditor()">
+          <option value="回"${ex.unit === "回" ? " selected" : ""}>回</option>
+          <option value="秒"${ex.unit === "秒" ? " selected" : ""}>秒</option>
+        </select>
+      </div>
+      <div class="ed-line">
+        <span class="ed-label">タイマー</span>
+        <div class="stepper">
+          <button onclick="edStep(${i},'secs',-1)" aria-label="減らす">−</button>
+          <span>${ex.secs}秒</span>
+          <button onclick="edStep(${i},'secs',1)" aria-label="増やす">＋</button>
+        </div>
+      </div>
+    </div>`).join("");
+}
+
+function edSet(i, field, value) {
+  if (!editMenu || !editMenu[i]) return;
+  editMenu[i][field] = value;
+}
+
+function edStep(i, field, dir) {
+  if (!editMenu || !editMenu[i]) return;
+  const step = (field === "secs" || editMenu[i].unit === "秒") ? 5 : 1;
+  const min = (field === "secs") ? 5 : 1;
+  editMenu[i][field] = Math.max(min, (parseInt(editMenu[i][field], 10) || min) + dir * step);
+  renderEditor();
+}
+
+function edDel(i) {
+  if (!editMenu) return;
+  editMenu.splice(i, 1);
+  renderEditor();
+}
+
+function edAdd() {
+  if (!editMenu) return;
+  editMenu.push({ name: "新しい種目", detail: "", tip: "", reps: 10, unit: "回", secs: 30 });
+  renderEditor();
+}
+
+function edDefault() {
+  editMenu = DEFAULT_MENU.map(e => ({ ...e }));
+  renderEditor();
+}
+
+function edSave() {
+  if (!editMenu || editMenu.length === 0) {
+    closeEditor();
+    return;
+  }
+  exercises = editMenu.map(sanitizeMenuItem);
+  const data = loadData();
+  data.menu = exercises.map(e => ({ ...e }));
+  saveData(data);
+  closeEditor();
+  handleReset();
+  document.getElementById("storageNote").textContent = "メニューを保存しました";
+}
+
+/* ============================================================
+   トレーニング記録・ストリーク・カレンダー
+   ============================================================ */
+
+function isScheduled(d) {
+  return SCHEDULED_DAYS.includes(d.getDay());
+}
+
+function prevScheduled(d) {
+  const c = new Date(d);
+  do { c.setDate(c.getDate() - 1); } while (!isScheduled(c));
+  return c;
+}
+
+// 予定日(月・木)を連続で実施できている回数。
+// 今日が予定日でまだ未実施の場合は「保留」としてストリークを切らない。
+function calcStreak() {
+  const workouts = loadData().workouts;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  let cur = new Date(today);
+  if (!isScheduled(cur)) cur = prevScheduled(cur);
+  else if (!workouts[fmtDate(cur)]) cur = prevScheduled(cur); // 今日は保留扱い
+  let streak = 0;
+  while (workouts[fmtDate(cur)]) {
+    streak++;
+    cur = prevScheduled(cur);
+  }
+  return streak;
+}
+
+function recordTodayWorkout() {
+  const data = loadData();
+  data.workouts[fmtDate(new Date())] = { sets: 3, results: sessionResults };
+  saveData(data);
+  sessionResults = {};
+  checkPromotions();
+  renderRecords();
+  return calcStreak();
+}
+
+/* ---- 実績入力 ---- */
+
+function updateRepsDisplay() {
+  const ex = exercises[currentEx];
+  document.getElementById("repsVal").textContent = repsCurrent + (ex ? ex.unit : "回");
+}
+
+function repsStep(dir) {
+  const ex = exercises[currentEx];
+  const step = (ex && ex.unit === "秒") ? 5 : 1;
+  repsCurrent = Math.max(0, repsCurrent + dir * step);
+  updateRepsDisplay();
+}
+
+function captureReps(i) {
+  const ex = exercises[i];
+  if (!ex) return;
+  if (!sessionResults[ex.name]) sessionResults[ex.name] = { target: ex.reps, unit: ex.unit, sets: [] };
+  sessionResults[ex.name].sets.push(repsCurrent);
+}
+
+/* ---- 自動昇格 ---- */
+
+function findChainPos(name) {
+  for (let c = 0; c < CHAINS.length; c++) {
+    const idx = CHAINS[c].findIndex(s => s.name === name);
+    if (idx !== -1) return { chain: c, stage: idx };
+  }
+  return null;
+}
+
+// そのセッションで全セットが目標以上か
+function sessionAchieved(r) {
+  return r && Array.isArray(r.sets) && r.sets.length > 0 && Math.min(...r.sets) >= r.target;
+}
+
+function checkPromotions() {
+  const data = loadData();
+  const dates = Object.keys(data.workouts).sort().reverse();
+  const promoted = [];
+  exercises.forEach((ex, i) => {
+    const pos = findChainPos(ex.name);
+    if (!pos || pos.stage >= CHAINS[pos.chain].length - 1) return;
+    const recent = [];
+    for (const d of dates) {
+      const w = data.workouts[d];
+      if (w && w.results && w.results[ex.name]) {
+        recent.push(w.results[ex.name]);
+        if (recent.length >= PROMOTE_STREAK) break;
+      }
+    }
+    if (recent.length >= PROMOTE_STREAK && recent.every(sessionAchieved)) {
+      const next = CHAINS[pos.chain][pos.stage + 1];
+      exercises[i] = { ...next };
+      promoted.push(ex.name + " → " + next.name);
+    }
+  });
+  if (promoted.length > 0) {
+    const d2 = loadData();
+    d2.menu = exercises.map(e => ({ ...e }));
+    saveData(d2);
+    buildCards();
+    showPromo("昇格! " + promoted.join("、") + " に進化しました。次回から新しい目標です");
+  }
+}
+
+function showPromo(msg) {
+  const banner = document.getElementById("promoBanner");
+  const text = document.getElementById("promoText");
+  text.textContent = banner.hidden ? msg : (text.textContent + " ／ " + msg);
+  banner.hidden = false;
+}
+
+/* ============================================================
+   実績バッジ
+   ============================================================ */
+
+const BADGES = [
+  { id: "first",    icon: "🔥", name: "初陣",         desc: "初めてのトレーニングを完了", test: s => s.total >= 1 },
+  { id: "five",     icon: "🌱", name: "三日坊主卒業", desc: "累計5回を達成",             test: s => s.total >= 5 },
+  { id: "ten",      icon: "💪", name: "常連",         desc: "累計10回を達成",            test: s => s.total >= 10 },
+  { id: "fifty",    icon: "🏋️", name: "鉄人",         desc: "累計50回を達成",            test: s => s.total >= 50 },
+  { id: "hundred",  icon: "👑", name: "百戦錬磨",     desc: "累計100回を達成",           test: s => s.total >= 100 },
+  { id: "streak4",  icon: "📅", name: "習慣の芽",     desc: "予定日を連続4回達成（約2週間）", test: s => s.streak >= 4 },
+  { id: "streak8",  icon: "🎯", name: "皆勤賞",       desc: "予定日を連続8回達成（約1か月）", test: s => s.streak >= 8 },
+  { id: "over",     icon: "⚡", name: "限界突破",     desc: "目標を5回以上上回るセットを記録", test: s => s.overachieved },
+  { id: "decline",  icon: "🪜", name: "次の段階へ",   desc: "足上げプッシュアップに到達", test: s => s.reached.has("足上げプッシュアップ") },
+  { id: "archer",   icon: "🏹", name: "アーチャー",   desc: "アーチャープッシュアップに到達", test: s => s.reached.has("アーチャープッシュアップ") },
+  { id: "onearm",   icon: "🦾", name: "片手の覇者",   desc: "片手プッシュアップに到達",   test: s => s.reached.has("片手プッシュアップ") },
+  { id: "bulgand",  icon: "🦵", name: "片脚の道",     desc: "ブルガリアンスクワットに到達", test: s => s.reached.has("ブルガリアンスクワット") },
+  { id: "pistol",   icon: "🦿", name: "ピストル使い", desc: "ピストルスクワットに到達",   test: s => s.reached.has("ピストルスクワット") },
+  { id: "rowup",    icon: "🎒", name: "背負う者",     desc: "リュックロウに到達",         test: s => s.reached.has("リュックロウ") },
+  { id: "rowmax",   icon: "🗻", name: "背中の支配者", desc: "重量リュックロウに到達",     test: s => s.reached.has("重量リュックロウ") },
+  { id: "weight1",  icon: "⚖️", name: "計測開始",     desc: "体重を初めて記録",           test: s => s.weightCount >= 1 },
+  { id: "weight30", icon: "📈", name: "データドリブン", desc: "体重を30回記録",           test: s => s.weightCount >= 30 },
+];
+
+function computeBadgeStats() {
+  const data = loadData();
+  const workouts = data.workouts;
+  const keys = Object.keys(workouts);
+
+  // 到達した種目: 現在のメニュー + 過去の実績に登場した種目名
+  const reachedRaw = new Set(exercises.map(e => e.name));
+  let overachieved = false;
+  keys.forEach(k => {
+    const w = workouts[k];
+    if (w && w.results) {
+      Object.keys(w.results).forEach(name => {
+        reachedRaw.add(name);
+        const r = w.results[name];
+        if (r && Array.isArray(r.sets) && r.sets.some(v => v >= r.target + 5)) overachieved = true;
+      });
+    }
+  });
+  // チェーン上の到達点より前の段階もすべて「到達済み」扱いにする
+  const reached = new Set(reachedRaw);
+  reachedRaw.forEach(name => {
+    const pos = findChainPos(name);
+    if (pos) for (let i = 0; i <= pos.stage; i++) reached.add(CHAINS[pos.chain][i].name);
+  });
+
+  return {
+    total: keys.length,
+    streak: calcStreak(),
+    weightCount: Object.keys(data.weights).length,
+    reached,
+    overachieved,
+  };
+}
+
+function checkBadges() {
+  const stats = computeBadgeStats();
+  const data = loadData();
+  const unlocked = [];
+  BADGES.forEach(b => {
+    if (!data.badges[b.id] && b.test(stats)) {
+      data.badges[b.id] = fmtDate(new Date());
+      unlocked.push(b.icon + " " + b.name);
+    }
+  });
+  if (unlocked.length > 0) {
+    saveData(data);
+    showPromo("実績解除! " + unlocked.join("、"));
+  }
+  renderBadges();
+}
+
+function renderBadges() {
+  const badges = loadData().badges;
+  document.getElementById("badgeGrid").innerHTML = BADGES.map(b => {
+    const date = badges[b.id];
+    return `<div class="badge-card${date ? "" : " locked"}">
+      <div class="badge-icon">${b.icon}</div>
+      <div class="badge-name">${b.name}</div>
+      <div class="badge-desc">${b.desc}</div>
+      <div class="badge-date">${date ? date.replace(/-/g, "/") + " 解除" : ""}</div>
+    </div>`;
+  }).join("");
+}
+
+function renderStats() {
+  const workouts = loadData().workouts;
+  const keys = Object.keys(workouts);
+  const now = new Date();
+  const monthPrefix = now.getFullYear() + "-" + String(now.getMonth() + 1).padStart(2, "0");
+  document.getElementById("streakNum").textContent = calcStreak();
+  document.getElementById("totalNum").textContent = keys.length;
+  document.getElementById("monthNum").textContent = keys.filter(k => k.startsWith(monthPrefix)).length;
+}
+
+const _now = new Date();
+let calYear = _now.getFullYear(), calMonth = _now.getMonth();
+
+function moveCal(delta) {
+  calMonth += delta;
+  if (calMonth < 0) { calMonth = 11; calYear--; }
+  if (calMonth > 11) { calMonth = 0; calYear++; }
+  renderCalendar();
+}
+
+function renderCalendar() {
+  const grid = document.getElementById("calGrid");
+  const workouts = loadData().workouts;
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  const startDow = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+  document.getElementById("calTitle").textContent = calYear + "年" + (calMonth + 1) + "月";
+
+  let html = "";
+  const dows = ["日", "月", "火", "水", "木", "金", "土"];
+  dows.forEach((label, i) => {
+    html += `<div class="cal-dow${SCHEDULED_DAYS.includes(i) ? " sched" : ""}">${label}</div>`;
+  });
+  for (let i = 0; i < startDow; i++) html += `<div class="cal-blank"></div>`;
+  for (let day = 1; day <= daysInMonth; day++) {
+    const d = new Date(calYear, calMonth, day);
+    const key = fmtDate(d);
+    const done = !!workouts[key];
+    const isToday = d.getTime() === today.getTime();
+    const future = d.getTime() > today.getTime();
+    let cls = "cal-day";
+    if (done) cls += " done";
+    if (isToday) cls += " today";
+    if (future) cls += " future";
+    const sdot = isScheduled(d) ? `<span class="sdot"></span>` : "";
+    html += `<div class="${cls}" data-key="${key}" data-future="${future}">${day}${sdot}</div>`;
+  }
+  grid.innerHTML = html;
+}
+
+document.getElementById("calGrid").addEventListener("click", (e) => {
+  const cell = e.target.closest(".cal-day");
+  if (!cell || cell.dataset.future === "true") return;
+  const key = cell.dataset.key;
+  const data = loadData();
+  if (data.workouts[key]) {
+    delete data.workouts[key];
+  } else {
+    data.workouts[key] = { sets: 3, manual: true };
+  }
+  saveData(data);
+  renderRecords();
+});
+
+function renderRecords() {
+  renderStats();
+  renderCalendar();
+  checkBadges();
+}
+
+/* ============================================================
+   体重記録とグラフ
+   ============================================================ */
+
+function weightEntries() {
+  const weights = loadData().weights;
+  return Object.keys(weights).sort().map(k => ({ date: k, w: weights[k] }));
+}
+
+function saveWeight() {
+  const dateVal = document.getElementById("wDate").value;
+  const wVal = parseFloat(document.getElementById("wVal").value);
+  const note = document.getElementById("wNote");
+  if (!dateVal || isNaN(wVal) || wVal <= 0 || wVal > 500) {
+    note.textContent = "日付と体重(kg)を入力してください";
+    return;
+  }
+  const data = loadData();
+  data.weights[dateVal] = Math.round(wVal * 10) / 10;
+  saveData(data);
+  document.getElementById("wVal").value = "";
+  note.textContent = "";
+  renderWeights();
+}
+
+function deleteWeight(key) {
+  const data = loadData();
+  delete data.weights[key];
+  saveData(data);
+  renderWeights();
+}
+
+function renderWeights() {
+  const entries = weightEntries();
+  const latest = entries[entries.length - 1];
+  const prev = entries[entries.length - 2];
+  document.getElementById("wLatest").textContent = latest ? latest.w.toFixed(1) : "—";
+  document.getElementById("wLatestDate").textContent = latest
+    ? latest.date.slice(5).replace("-", "/") + " 時点（kg）" : "未記録";
+  if (latest && prev) {
+    const d = Math.round((latest.w - prev.w) * 10) / 10;
+    document.getElementById("wDiff").textContent = (d > 0 ? "+" : "") + d.toFixed(1);
+  } else {
+    document.getElementById("wDiff").textContent = "—";
+  }
+  const list = document.getElementById("wList");
+  list.innerHTML = entries.slice(-5).reverse().map(e =>
+    `<div class="w-item"><span>${e.date.slice(5).replace("-", "/")} — ${e.w.toFixed(1)} kg</span>` +
+    `<button onclick="deleteWeight('${e.date}')" aria-label="削除">×</button></div>`).join("");
+  drawWeightChart();
+  checkBadges();
+}
+
+function drawWeightChart() {
+  const cv = document.getElementById("weightChart");
+  const wrap = cv.parentElement;
+  const cssW = wrap.clientWidth || 300;
+  const cssH = 220;
+  const dpr = window.devicePixelRatio || 1;
+  cv.width = cssW * dpr;
+  cv.height = cssH * dpr;
+  cv.style.height = cssH + "px";
+  const c = cv.getContext("2d");
+  c.scale(dpr, dpr);
+  c.clearRect(0, 0, cssW, cssH);
+
+  const entries = weightEntries().slice(-30);
+  const empty = document.getElementById("chartEmpty");
+  if (entries.length === 0) { empty.style.display = "block"; return; }
+  empty.style.display = "none";
+
+  const vals = entries.map(e => e.w);
+  let min = Math.min(...vals), max = Math.max(...vals);
+  if (max - min < 1) { const mid = (max + min) / 2; min = mid - 0.5; max = mid + 0.5; }
+  const range = max - min;
+  min -= range * 0.15; max += range * 0.15;
+
+  const padL = 40, padR = 14, padT = 12, padB = 24;
+  const plotW = cssW - padL - padR, plotH = cssH - padT - padB;
+  const xAt = i => entries.length === 1 ? padL + plotW / 2 : padL + (i / (entries.length - 1)) * plotW;
+  const yAt = v => padT + (1 - (v - min) / (max - min)) * plotH;
+
+  // 横グリッド線と値ラベル
+  c.font = "11px " + getComputedStyle(document.body).fontFamily;
+  c.textAlign = "right";
+  c.textBaseline = "middle";
+  for (let t = 0; t <= 3; t++) {
+    const v = max - (t / 3) * (max - min);
+    const y = yAt(v);
+    c.strokeStyle = "#e6e6ea";
+    c.lineWidth = 1;
+    c.beginPath(); c.moveTo(padL, y); c.lineTo(cssW - padR, y); c.stroke();
+    c.fillStyle = "#8a8a8a";
+    c.fillText(v.toFixed(1), padL - 6, y);
+  }
+
+  // 折れ線
+  if (entries.length > 1) {
+    c.strokeStyle = "#534AB7";
+    c.lineWidth = 2;
+    c.lineJoin = "round";
+    c.beginPath();
+    entries.forEach((e, i) => {
+      const x = xAt(i), y = yAt(e.w);
+      if (i === 0) c.moveTo(x, y); else c.lineTo(x, y);
+    });
+    c.stroke();
+  }
+
+  // 点（最新は強調）
+  entries.forEach((e, i) => {
+    const x = xAt(i), y = yAt(e.w);
+    const isLast = i === entries.length - 1;
+    if (isLast) {
+      c.fillStyle = "#ffffff";
+      c.beginPath(); c.arc(x, y, 5.5, 0, Math.PI * 2); c.fill();
+    }
+    c.fillStyle = "#534AB7";
+    c.beginPath(); c.arc(x, y, isLast ? 4 : 3, 0, Math.PI * 2); c.fill();
+  });
+
+  // 日付ラベル（最初・中間・最後）
+  c.fillStyle = "#8a8a8a";
+  c.textBaseline = "top";
+  const labelIdx = entries.length >= 7
+    ? [0, Math.floor((entries.length - 1) / 2), entries.length - 1]
+    : (entries.length > 1 ? [0, entries.length - 1] : [0]);
+  [...new Set(labelIdx)].forEach((i, n, arr) => {
+    const label = entries[i].date.slice(5).replace("-", "/");
+    c.textAlign = (i === 0 && arr.length > 1) ? "left" : (i === entries.length - 1 ? "right" : "center");
+    c.fillText(label, xAt(i), cssH - padB + 8);
+  });
+}
+
+window.addEventListener("resize", () => drawWeightChart());
+
+/* ============================================================
+   バックアップ
+   ============================================================ */
+
+function exportData() {
+  const blob = new Blob([JSON.stringify(loadData(), null, 2)], { type: "application/json" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "kintore-records.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(a.href);
+}
+
+function importData(ev) {
+  const file = ev.target.files && ev.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      const imported = JSON.parse(reader.result);
+      if (!imported || (typeof imported.workouts !== "object" && typeof imported.weights !== "object")) {
+        throw new Error("形式が違います");
+      }
+      const data = loadData();
+      if (imported.workouts) Object.assign(data.workouts, imported.workouts);
+      if (imported.weights) Object.assign(data.weights, imported.weights);
+      if (imported.badges && typeof imported.badges === "object") Object.assign(data.badges, imported.badges);
+      if (Array.isArray(imported.menu) && imported.menu.length > 0) {
+        data.menu = imported.menu.map(sanitizeMenuItem);
+        exercises = data.menu.map(e => ({ ...e }));
+        buildCards();
+      }
+      saveData(data);
+      renderRecords();
+      renderWeights();
+      document.getElementById("storageNote").textContent = "読み込みが完了しました";
+    } catch (e) {
+      document.getElementById("storageNote").textContent = "読み込めませんでした。書き出したJSONファイルを選んでください";
+    }
+    ev.target.value = "";
+  };
+  reader.readAsText(file);
+}
+
+/* ---- 永続ストレージのリクエスト ---- */
+
+(function requestPersist() {
+  try {
+    if (navigator.storage && navigator.storage.persist) {
+      navigator.storage.persist().then((granted) => {
+        if (granted) document.getElementById("storageNote").textContent = "記録はこの端末に保存されます";
+      }).catch(() => {});
+    }
+  } catch (e) { /* ignore */ }
+})();
+
+/* ---- 初期化 ---- */
+
+exercises = loadMenu();
+document.getElementById("wDate").value = fmtDate(new Date());
+initSoundSelect();
+drawClock(1);
+buildCards();
+renderRecords();
+renderWeights();
+</script>
+
+</body>
+</html>
